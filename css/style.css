@@ -11,7 +11,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    font-family: 'Open Sans', sans-serif;
+    font-family: Helvetica,Arial, sans-serif;
  }
 
 
@@ -55,7 +55,6 @@ button {
     color: rgba(0, 0, 0, 0.85);
     cursor: pointer;
     display: inline-flex;
-    font-family: Helvetica,Arial,sans-serif;
     font-size: 18pt;
     font-weight: 500;
     justify-content: center;

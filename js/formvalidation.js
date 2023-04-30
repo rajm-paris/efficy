@@ -27,10 +27,17 @@ const oppoStatus = [
 ];
 
 const FormComponent = class {
+   
   constructor() {
+    this.selectbox  = document.querySelector('select[name="status"]') || document.getElementsByName('status')[0];
+    this.inputbox   = document.querySelector('input[name="success"]') || document.getElementsByName('success')[0];
+    this.form       = document.querySelector('form') || document.getElementsByTagName('form')[0];
+
     this.populateSelect();//populate Select options
   }
+
   start() {
+    this.bindElements();// Bind select to input
     this.handleForm();//Form Submit
   }
 
@@ -38,29 +45,68 @@ const FormComponent = class {
   ** Populate the Select options with given Data
   */
   populateSelect() {
-    const select = document.querySelector('select[name="status"]');
-    if (!select) {
+
+    if (!this.selectbox) {
         console.error('Select element not found.');
         return false;
     }
+
     oppoStatus.forEach(({ K_OPPO_STATUS, SUCCESS, STATUS }) => {
-        const option = new Option(STATUS, K_OPPO_STATUS);
-        option.dataset.success = SUCCESS;
-        select.add(option);
-    });
+                                                  const option = new Option(STATUS, K_OPPO_STATUS);
+                                                  option.dataset.success = SUCCESS;
+                                                  this.selectbox.add(option);
+                                              });
+    this.inputbox.value = this.selectbox.options[this.selectbox.selectedIndex].dataset.success;//default
   }//Eof Method(onFormSubmit)
+
+  /*
+	** Dynamic populating of select options
+	*/
+	bindElements(){
+	
+		const binding_obj ={};
+
+    if (!this.selectbox || !this.inputbox) {
+      console.error('Input or select element not found.');
+      return false;
+    }
+
+		FormComponent.bindingObjects({from: this.selectbox, to:this.inputbox}, binding_obj);
+		
+		this.selectbox.addEventListener("change", (eve)=>{ 
+													console.log(eve.target.value);
+													binding_obj.value=eve.target.options[eve.target.selectedIndex].dataset.success;
+													});
+		
+		
+	}//Eof Method(bindElements)
+
+  /*
+	** binding two elements(oneway)
+	*/
+	static bindingObjects(bind_elements, bind_obj){
+
+		Object.defineProperty(bind_obj, 'value', {
+          set(new_val){
+            bind_elements.to.value = new_val;
+          }
+        });
+		
+		console.log(bind_obj);
+		
+	}//Eof Method(bindOneWay)
+
 
   /*
 	** Add dynamic Form Submission Event 
 	*/
 	handleForm(){
-		const form =  document.querySelector('form') || document.getElementsByTagName('form')[0];
-    if (!form) {
+    if (!this.form) {
         console.error('Form element not found.');
         return false;
     }
 
-		form.addEventListener("submit", FormComponent.onFormSubmit);//attaching submition event		
+		this.form.addEventListener("submit", FormComponent.onFormSubmit);//attaching submition event		
 	}//Eof Method(handleForm)
 	
 	/*

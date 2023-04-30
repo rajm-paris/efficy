@@ -1,0 +1,5 @@
+/* *S* Reset all Margins and Paddings *S* */
+* {
+margin: 0;
+padding: 0;
+}

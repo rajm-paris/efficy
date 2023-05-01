@@ -49,7 +49,7 @@ const FormComponent = class {
     if (!this.selectbox) {
         console.error('Select element not found.');
         return false;
-    }
+    }//Eof if()
 
     oppoStatus.forEach(({ K_OPPO_STATUS, SUCCESS, STATUS }) => {
                                                   const option = new Option(STATUS, K_OPPO_STATUS);
@@ -69,7 +69,7 @@ const FormComponent = class {
     if (!this.selectbox || !this.inputbox) {
       console.error('Input or select element not found.');
       return false;
-    }
+    }//Eof if()
 
 		FormComponent.bindingObjects({from: this.selectbox, to:this.inputbox}, binding_obj);
 		
@@ -89,11 +89,8 @@ const FormComponent = class {
 		Object.defineProperty(bind_obj, 'value', {
           set(new_val){
             bind_elements.to.value = new_val;
-          }
+          }//Eof set(;)
         });
-		
-		console.log(bind_obj);
-		
 	}//Eof Method(bindOneWay)
 
 
@@ -117,15 +114,29 @@ const FormComponent = class {
 		event = event || window.event;
 		event.preventDefault();
 		
-		const data 			= new FormData(event.target);
+		const data 			  = new FormData(event.target);
 		const dataObject 	= Object.fromEntries(data.entries());
-		const output 		= document.getElementsByClassName("output")[0];
-		const output_text	= document.createElement('p');
-		
-		output_text.innerText = JSON.stringify(dataObject);
+		const output 		  = document.querySelector('.output') || document.getElementsByClassName("output")[0];//op block container
+		const output_text	= document.createElement('p');//text container used for text
+		console.log(dataObject)
+		output_text.innerText = JSON.stringify(FormComponent.jsonConversion(dataObject));
 		output.textContent = '';//will be faster than innerHTML as browsers won't invoke their HTML parsers 
 		output.appendChild(output_text);
-	}//Eof Method(onFormSubmit)
+	}//Eofstatic-Method(onFormSubmit)
+
+  /*
+  ** Convert to numbers, where there are numbers represented as string
+  */
+ static jsonConversion(object){
+
+      for(var prop in object){
+          if(object.hasOwnProperty(prop) && object[prop] !== null && !isNaN(object[prop])){
+            object[prop] = +object[prop];   
+          }//Eof if()
+      }//Eof for()
+
+  return object;
+ }//Eof static-Method(jsonConversion)
 
 }//Eof class(FormComponent)
 
